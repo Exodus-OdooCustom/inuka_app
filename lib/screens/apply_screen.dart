@@ -86,12 +86,6 @@ class OmbiScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _white, 
-      appBar: AppBar(
-        title: const Text('Ombi - Fanya Maombi', style: TextStyle(color: Colors.white)),
-        backgroundColor:_white,
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 0,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -100,7 +94,7 @@ class OmbiScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.only(top: 10.0, bottom: 25.0),
               child: Text(
-                'Chagua aina ya maombi unayotaka kufanya:',
+                'Chagua aina ya maombi ya mkopo unayotaka kufanya:',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -111,8 +105,8 @@ class OmbiScreen extends StatelessWidget {
             
             _buildApplicationCard(
               context,
-              title: 'Maombi ya Hisa',
-              subtitle: 'Nunua hisa mpya ili kuongeza mtaji na akiba yako.',
+              title: 'Maombi ya Mkopo Hisa',
+              subtitle: 'Chukua mkopo hisa kulingana na idadi ya hisa.',
               icon: Icons.pie_chart,
               routeName: '/hisa_mkopo_application',
             ),
@@ -120,8 +114,8 @@ class OmbiScreen extends StatelessWidget {
 
             _buildApplicationCard(
               context,
-              title: 'Maombi ya Mkopo',
-              subtitle: 'Omba mkopo wa dharura au wa maendeleo.',
+              title: 'Maombi ya Mkopo jamii',
+              subtitle: 'Omba mkopo wa dharura au wa maendeleo kulingana na kiasi chako cha jamii.',
               icon: Icons.monetization_on, 
               routeName: '/jamii_mkopo_application',
             ),

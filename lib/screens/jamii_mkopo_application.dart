@@ -11,6 +11,7 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
   static const Color _primaryGreen = Color(0xFF1B5E20); 
   static const Color _vibrantGreen = Color(0xFF8BC34A); 
   static const Color _white = Colors.white;
+  static const Color _lightGrey = Color(0xFFF5F5F5);
 
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
@@ -21,10 +22,36 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
   String? _loanPurpose; 
   
   bool _isLoading = false;
-  final List<String> _loanPurposes = ['Elimu (Education)', 'Ugonjwa (Sickness)', 'Msiba (Bereavement)'];
+  final List<String> _loanPurposes = ['Elimu', 'Ugonjwa', 'Msiba','Sherehe'];
+
+  final double _memberJamiiBalance = 80000.0; 
+  final double _maxLoanMultiplier = 2.0; 
+  final double _interestRate = 0.0; 
+
+  late double _maxLoanLimit;
+
+  @override
+  void initState() {
+    super.initState();
+    _maxLoanLimit = _memberJamiiBalance * _maxLoanMultiplier;
+  }
 
   void _submitApplication() async {
     if (_formKey.currentState!.validate()) {
+      
+      final double principal = double.tryParse(_amountController.text) ?? 0;
+
+      if (principal > _maxLoanLimit) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Kiasi cha mkopo (${principal.toStringAsFixed(2)} TSh) kinazidi kikomo chako cha Jamii (Tsh ${_maxLoanLimit.toStringAsFixed(2)}).'),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+        return; 
+      }
+
       setState(() {
         _isLoading = true;
       });
@@ -39,12 +66,10 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Maombi ya Mkopo wa Jamii ya ${_amountController.text} yamepokelewa.'),
+            content: Text('Maombi ya Mkopo wa Jamii ya ${_amountController.text} TSh yamepokelewa. Hakuna Riba.'),
             backgroundColor: _vibrantGreen,
           ),
         );
- 
-        Navigator.pop(context); 
       }
     }
   }
@@ -89,7 +114,7 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
     return Scaffold(
       backgroundColor: _white, 
       appBar: AppBar(
-        title: const Text('Maombi ya Mkopo wa Jamii', style: TextStyle(color: Colors.white)),
+        title: const Text('Maombi ya Mkopo wa Jamii', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: _primaryGreen,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
@@ -105,18 +130,33 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: _primaryGreen.withOpacity(0.05),
+                  color: _lightGrey,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: _primaryGreen.withOpacity(0.2)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('TAARIFA ZA MKOPAJI', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _primaryGreen)),
+                    Text('TAARIFA ZA MKOPAJI & KIKOMO', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _primaryGreen)),
                     const Divider(color: _primaryGreen),
-                    Text('Jina la Mwanachama: $_memberName', style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+                    
+                    Text('Jina: $_memberName | Namba: $_memberNumber', style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+                    const SizedBox(height: 10),
+                    
+                    Text('Salio la Jamii: ${_memberJamiiBalance.toStringAsFixed(2)} TSh', style: TextStyle(color: Colors.grey[800], fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 5),
-                    Text('Namba ya Mwanachama: $_memberNumber', style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+
+
+                    Text(
+                      'Kikomo cha Mkopo: ${_maxLoanLimit.toStringAsFixed(2)} TSh', 
+                      style: TextStyle(color: _vibrantGreen, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 5),
+
+                    // Text(
+                    //   'Riba ya Mkopo: ${(_interestRate * 100).toInt()}% Flat', 
+                    //   style: TextStyle(color: Colors.redAccent, fontSize: 16, fontWeight: FontWeight.w600),
+                    // ),
                   ],
                 ),
               ),
@@ -130,14 +170,15 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
               _buildTextField(
                 controller: _amountController,
                 labelText: 'Kiasi cha Mkopo (Tsh)',
-                hintText: 'Mfano: 250000',
+                hintText: '(Kiasi Usizidi ${_maxLoanLimit.toStringAsFixed(0)})',
                 icon: Icons.attach_money,
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Tafadhali weka kiasi';
                   }
-                  if (double.tryParse(value) == null || double.parse(value)! <= 0) {
+                  final amount = double.tryParse(value);
+                  if (amount == null || amount <= 0) {
                     return 'Kiasi lazima kiwe namba chanya';
                   }
                   return null;
@@ -186,7 +227,7 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
               _buildTextField(
                 controller: _periodController,
                 labelText: 'Muda wa Kurejesha (Miezi)',
-                hintText: 'Mfano: 3 (Miezi 3)',
+                hintText: 'Mfano: 3 (Miezi 3). Ukomo ni miezi 12.',
                 icon: Icons.calendar_month,
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -203,7 +244,7 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
               const SizedBox(height: 30),
 
               const Text(
-                'AHADI YA MKOPAJI (Kama ilivyo katika Fomu)',
+                'AHADI YA MKOPAJI',
                 style: TextStyle(fontSize: 18, color: _primaryGreen, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
@@ -224,7 +265,7 @@ class _MkopoApplicationFormState extends State<MkopoApplicationForm> {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      '**Kumbuka:** Endapo nitashindwa kurejesha mkopo huu kwa muda uliotajwa, HISSA na jamii zangu zitatumika kufidia kiwango kilichobakia.',
+                      'KUMBUKA: Mkopo huu hauna Riba (0%). Endapo nitashindwa kurejesha, HISA na jamii zangu zitatumika kufidia kiwango kilichobakia.',
                       style: TextStyle(color: _primaryGreen, fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                   ],

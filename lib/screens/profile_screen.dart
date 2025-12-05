@@ -21,8 +21,9 @@ class ProfileScreen extends StatelessWidget {
   };
   
   final Map<String, String> paymentDetails = const {
-    'Njia ya Malipo': 'Simu ya Mkononi (M-PESA)',
-    'Taarifa za Malipo': 'Toleo la mwisho kusasishwa: 2024-11-20',
+    'Njia ya Malipo': 'Benki NMB ',
+    'Account Number ya malipo': '24310032645 ',
+    'Jina':'INUKA GROUP FIVE 2021',
   };
 
   final List<Map<String, String>> leadersContacts = const [

@@ -104,107 +104,107 @@ class _MainLayoutState extends State<MainLayout> {
       
       body: _pages[_selectedIndex], 
 
-      drawer: Drawer(
-        backgroundColor: _white,
-        child: Column(
-          children: [
+      // drawer: Drawer(
+      //   backgroundColor: _white,
+      //   child: Column(
+      //     children: [
 
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(25, 50, 25, 25),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [_primaryGreen, _mediumGreen],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 40, color: Color(0xFF1B5E20)),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Maya Kimana",
-                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "MAYA-001 | Inuka Group",
-                    style: TextStyle(fontSize: 14, color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
+      //       Container(
+      //         width: double.infinity,
+      //         padding: const EdgeInsets.fromLTRB(25, 50, 25, 25),
+      //         decoration: BoxDecoration(
+      //           gradient: LinearGradient(
+      //             colors: [_primaryGreen, _mediumGreen],
+      //             begin: Alignment.topLeft,
+      //             end: Alignment.bottomRight,
+      //           ),
+      //         ),
+      //         child: const Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [
+      //             CircleAvatar(
+      //               radius: 35,
+      //               backgroundColor: Colors.white,
+      //               child: Icon(Icons.person, size: 40, color: Color(0xFF1B5E20)),
+      //             ),
+      //             SizedBox(height: 10),
+      //             Text(
+      //               "Maya Kimana",
+      //               style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+      //             ),
+      //             Text(
+      //               "MAYA-001 | Inuka Group",
+      //               style: TextStyle(fontSize: 14, color: Colors.white70),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
 
-            _buildDrawerItem(
-              title: 'Nyumbani ',
-              icon: Icons.home_outlined,
-              isSelected: _selectedIndex == 0,
-              onTap: () => _onDrawerItemTapped(0, '/home'),
-            ),
-            _buildDrawerItem(
-              title: 'Ombi ',
-              icon: Icons.launch_outlined, 
-              isSelected: _selectedIndex == 1,
-              onTap: () => _onDrawerItemTapped(1, '/ombi_selection'),
-            ),
-            _buildDrawerItem(
-              title: 'uchambuzi ',
-              icon: Icons.insights_rounded,
-              isSelected: _selectedIndex == 2,
-              onTap: () => _onDrawerItemTapped(2, '/insight'),
-            ),
-            _buildDrawerItem(
-              title: 'Wasifu',
-              icon: Icons.person_outline,
-              isSelected: _selectedIndex == 3,
-              onTap: () => _onDrawerItemTapped(3, '/profile'),
-            ),
+      //       _buildDrawerItem(
+      //         title: 'Nyumbani ',
+      //         icon: Icons.home_outlined,
+      //         isSelected: _selectedIndex == 0,
+      //         onTap: () => _onDrawerItemTapped(0, '/home'),
+      //       ),
+      //       _buildDrawerItem(
+      //         title: 'Ombi ',
+      //         icon: Icons.launch_outlined, 
+      //         isSelected: _selectedIndex == 1,
+      //         onTap: () => _onDrawerItemTapped(1, '/ombi_selection'),
+      //       ),
+      //       _buildDrawerItem(
+      //         title: 'uchambuzi ',
+      //         icon: Icons.insights_rounded,
+      //         isSelected: _selectedIndex == 2,
+      //         onTap: () => _onDrawerItemTapped(2, '/insight'),
+      //       ),
+      //       _buildDrawerItem(
+      //         title: 'Wasifu',
+      //         icon: Icons.person_outline,
+      //         isSelected: _selectedIndex == 3,
+      //         onTap: () => _onDrawerItemTapped(3, '/profile'),
+      //       ),
             
-            const Divider(),
+      //       const Divider(),
 
-            _buildDrawerItem(
-              title: 'Taarifa',
-              icon: Icons.notifications_outlined,
-              isSelected: false,
-              onTap: () => _onDrawerItemTapped(99, '/alerts'),
-            ),
+      //       _buildDrawerItem(
+      //         title: 'Taarifa',
+      //         icon: Icons.notifications_outlined,
+      //         isSelected: false,
+      //         onTap: () => _onDrawerItemTapped(99, '/alerts'),
+      //       ),
 
-            _buildDrawerItem(
-              title: 'Ratiba ',
-              icon: Icons.calendar_today_outlined,
-              isSelected: false,
-              onTap: () => _onDrawerItemTapped(99, '/calendar'),
-            ),
-            _buildDrawerItem(
-              title: 'Mawasiliano',
-              icon: Icons.support_agent,
-              isSelected: false,
-              onTap: () => _onDrawerItemTapped(99, '/contact_support'),
-            ),
+      //       _buildDrawerItem(
+      //         title: 'Ratiba ',
+      //         icon: Icons.calendar_today_outlined,
+      //         isSelected: false,
+      //         onTap: () => _onDrawerItemTapped(99, '/calendar'),
+      //       ),
+      //       _buildDrawerItem(
+      //         title: 'Mawasiliano',
+      //         icon: Icons.support_agent,
+      //         isSelected: false,
+      //         onTap: () => _onDrawerItemTapped(99, '/contact_support'),
+      //       ),
             
-            const Spacer(),
+      //       const Spacer(),
             
 
-            _buildDrawerItem(
-              title: 'Toka (Logout)',
-              icon: Icons.logout,
-              onTap: () {
+      //       _buildDrawerItem(
+      //         title: 'Toka (Logout)',
+      //         icon: Icons.logout,
+      //         onTap: () {
 
-                Navigator.popUntil(context, (route) => route.isFirst);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Umefanikiwa kutoka kwa wasifu wako!', style: TextStyle(color: _primaryGreen)), backgroundColor: _lightGreen),
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+      //           Navigator.popUntil(context, (route) => route.isFirst);
+      //           ScaffoldMessenger.of(context).showSnackBar(
+      //             SnackBar(content: Text('Umefanikiwa kutoka kwa wasifu wako!', style: TextStyle(color: _primaryGreen)), backgroundColor: _lightGreen),
+      //           );
+      //         },
+      //       ),
+      //       const SizedBox(height: 20),
+      //     ],
+      //   ),
+      // ),
 
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

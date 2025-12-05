@@ -11,45 +11,76 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
   static const Color _primaryGreen = Color(0xFF1B5E20); 
   static const Color _vibrantGreen = Color(0xFF8BC34A); 
   static const Color _white = Colors.white;
+  static const Color _lightGrey = Color(0xFFF5F5F5);
 
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  final _sharesCountController = TextEditingController();
   final _declarationController = TextEditingController();
   
   bool _isLoading = false;
-  // Hardcoded values for demonstration
+  
+
   final String _memberName = 'Maya Kimana';
   final String _memberNumber = 'MAYA-001';
+
   final double _shareUnitValue = 3000.0; 
+  final double _maxLoanMultiplier = 3.0; 
+  final double _interestRate = 0.10; 
+  final double _memberHisaBalance = 120000.0; 
+
+
+  double _maxLoanLimit = 0.0;
+  double _currentLoanPrincipal = 0.0;
+  String _calculatedRepayment = '0.00';
+  String _calculatedInterest = '0.00';
+ 
 
   @override
   void initState() {
     super.initState();
-    _amountController.addListener(_calculateShares);
+    // Calculate the max limit immediately
+    _maxLoanLimit = _memberHisaBalance * _maxLoanMultiplier;
+    _amountController.addListener(_calculateLoanBreakdown);
   }
 
-  void _calculateShares() {
-    final String amountText = _amountController.text;
-    final double? amount = double.tryParse(amountText);
+  void _calculateLoanBreakdown() {
+    final String amountText = _amountController.text.replaceAll(',', '');
+    final double? principal = double.tryParse(amountText);
 
-    if (amount != null && amount > 0) {
+    if (principal != null && principal > 0) {
+      final double interestAmount = principal * _interestRate;
+      final double totalRepayment = principal + interestAmount;
 
-      final int shares = (amount / _shareUnitValue).floor();
-      
-      if (_sharesCountController.text != shares.toString()) {
-         _sharesCountController.value = TextEditingValue(
-            text: shares.toString(),
-            selection: TextSelection.collapsed(offset: shares.toString().length),
-          );
-      }
-    } else if (amountText.isEmpty) {
-       _sharesCountController.clear();
+      setState(() {
+        _currentLoanPrincipal = principal;
+        _calculatedInterest = interestAmount.toStringAsFixed(2);
+        _calculatedRepayment = totalRepayment.toStringAsFixed(2);
+      });
+    } else {
+      setState(() {
+        _currentLoanPrincipal = 0.0;
+        _calculatedInterest = '0.00';
+        _calculatedRepayment = '0.00';
+      });
     }
   }
 
   void _submitApplication() async {
     if (_formKey.currentState!.validate()) {
+      
+      final double principal = double.tryParse(_amountController.text) ?? 0;
+
+      if (principal > _maxLoanLimit) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Kiasi cha mkopo (${principal.toStringAsFixed(2)} TSh) kinazidi kikomo chako cha Hisa (Tsh ${_maxLoanLimit.toStringAsFixed(2)}).'),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+        return;
+      }
+
       setState(() {
         _isLoading = true;
       });
@@ -64,11 +95,11 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Maombi ya Hisa ya ${_amountController.text} (Kiasi cha hisa: ${_sharesCountController.text}) yamepokelewa.'),
+            content: Text('Maombi ya mkopo ya ${_amountController.text} TSh (Jumla ya Malipo: ${_calculatedRepayment} TSh) yamepokelewa.'),
             backgroundColor: _vibrantGreen,
           ),
         );
-        Navigator.pop(context); 
+
       }
     }
   }
@@ -110,12 +141,73 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
     );
   }
 
+
+  Widget _buildLoanSummaryCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: _primaryGreen.withOpacity(0.9), 
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'MUHTASARI WA MKOPO',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _white),
+          ),
+          const Divider(color: _white),
+          
+          _buildSummaryRow('Kiasi Ulichoomba', _currentLoanPrincipal.toStringAsFixed(2), Colors.yellow.shade200),
+          _buildSummaryRow('Riba (10% Flat)', _calculatedInterest, Colors.red.shade300),
+          _buildSummaryRow('Jumla ya Malipo', _calculatedRepayment, _vibrantGreen, isTotal: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value, Color valueColor, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: _white.withOpacity(0.8),
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            '$value TSh',
+            style: TextStyle(
+              fontSize: isTotal ? 18 : 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
+              color: valueColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _white, 
       appBar: AppBar(
-        title: const Text('Maombi ya Hisa', style: TextStyle(color: Colors.white)),
+        title: const Text('Maombi ya Mkopo Hisa', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: _primaryGreen,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
@@ -131,24 +223,39 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: _primaryGreen.withOpacity(0.05),
+                  color: _lightGrey,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: _primaryGreen.withOpacity(0.2)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('MAELEZO YA MWANACHAMA', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _primaryGreen)),
+                    Text('MAELEZO YA MWANACHAMA NA KIKOMO', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _primaryGreen)),
                     const Divider(color: _primaryGreen),
-                    Text('Jina la Mwanachama: $_memberName', style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+                    
+                    Text('Jina: $_memberName | Namba: $_memberNumber', style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+                    const SizedBox(height: 10),
+                    
+                    Text('Salio la Hisa: ${_memberHisaBalance.toStringAsFixed(2)} TSh', style: TextStyle(color: Colors.grey[800], fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 5),
-                    Text('Namba ya Mwanachama: $_memberNumber', style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+
+                    // Display Max Loan Limit
+                    Text(
+                      'Kikomo cha Mkopo (3x): ${_maxLoanLimit.toStringAsFixed(2)} TSh', 
+                      style: TextStyle(color: _vibrantGreen, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 5),
+
+                    Text(
+                      'Riba ya Mkopo: ${(_interestRate * 100).toInt()}% Flat', 
+                      style: TextStyle(color: Colors.orange, fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
                   ],
                 ),
               ),
 
               const Text(
-                'MAELEZO YA MAOMBI YA HISA',
+                'MAELEZO YA MAOMBI YA MKOPO',
                 style: TextStyle(fontSize: 18, color: _primaryGreen, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -156,15 +263,16 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
 
               _buildTextField(
                 controller: _amountController,
-                labelText: 'Kiasi cha Hisa (Tsh)',
-                hintText: 'Mfano: 50000',
+                labelText: 'Kiasi cha Mkopo',
+                hintText: '(Usizidi ${_maxLoanLimit.toStringAsFixed(0)})',
                 icon: Icons.currency_exchange,
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Tafadhali weka kiasi';
                   }
-                  if (double.tryParse(value) == null || double.parse(value)! <= 0) {
+                  final amount = double.tryParse(value);
+                  if (amount == null || amount <= 0) {
                     return 'Kiasi lazima kiwe namba chanya';
                   }
                   return null;
@@ -172,15 +280,10 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
               ),
               const SizedBox(height: 20),
 
-              _buildTextField(
-                controller: _sharesCountController,
-                labelText: 'Idadi ya Hisa Unazonunua',
-                hintText: 'Inahesabiwa kiotomatiki',
-                icon: Icons.calculate,
-                readOnly: true,
-                fillColor: Colors.grey[100],
-              ),
+              _buildLoanSummaryCard(),
+              
               const SizedBox(height: 30),
+
 
               const Text(
                 'MAKUBALIANO YA MALIPO',
@@ -191,8 +294,8 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                 controller: _declarationController,
                 maxLines: 4,
                 decoration: InputDecoration(
-                  labelText: 'Maelezo ya Malipo/Ahadi (Sahihi ya Mkopaji)',
-                  hintText: 'Kwa kutuma maombi haya, nakiri kuwa kiasi hiki kiongezwe kwenye hisa zangu.',
+                  labelText: 'Nandika Ahadi yako',
+                  hintText: 'Kwa kutuma maombi haya, nakubali masharti ya mkopo ya ${_memberHisaBalance.toStringAsFixed(2)} TSh kama dhamana na riba ya ${_interestRate * 100}%.',
                   filled: true,
                   fillColor: _white,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -210,14 +313,14 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                   ),
                 ),
                 validator: (value) {
-                  // In a real app, this would be a mandatory checkbox/digital signature
                   if (value == null || value.isEmpty || value.length < 5) {
-                    return 'Tafadhali thibitisha makubaliano kwa kuandika neno "Nakubali"';
+                    return 'Tafadhali thibitisha makubaliano kwa kuandika neno "Nakubali" au maelezo ya malipo.';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 40),
+
 
               SizedBox(
                 width: double.infinity,
@@ -229,7 +332,7 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    elevation: 2,
+                    elevation: 5,
                   ),
                   child: _isLoading
                       ? const SizedBox(
@@ -241,7 +344,7 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                           ),
                         )
                       : const Text(
-                          'Tuma Maombi ya Hisa',
+                          'Tuma Maombi ya Mkopo',
                           style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                 ),
@@ -255,9 +358,8 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
 
   @override
   void dispose() {
-    _amountController.removeListener(_calculateShares);
+    _amountController.removeListener(_calculateLoanBreakdown);
     _amountController.dispose();
-    _sharesCountController.dispose();
     _declarationController.dispose();
     super.dispose();
   }

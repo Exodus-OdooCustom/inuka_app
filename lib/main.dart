@@ -8,6 +8,7 @@ import 'package:inuka_app/screens/hisa_mkopo_application.dart';
 import 'package:inuka_app/screens/jamii_mkopo_application.dart';
 import 'package:inuka_app/screens/main_screen.dart';
 import 'package:inuka_app/screens/alerts_screen.dart';
+import 'package:inuka_app/screens/changia_screen.dart';
 
 import 'dart:async';
 
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
         '/hisa_mkopo_application':(context) => const HisaApplicationForm(),
         '/jamii_mkopo_application':(context) => const MkopoApplicationForm(),
         '/alerts':(context) => const AlertsScreen(),
-        
+        '/changia':(context) => const ContributionsScreen(),
       },
     );
   }

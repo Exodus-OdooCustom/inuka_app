@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'contributions_screen.dart'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,33 +15,49 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color _lightGreen = Color(0xFFE8F5E9); 
   static const Color _whiteText = Colors.white;
 
+  static const int hisaValue = 3000; 
   
   String _selectedDebtType = 'Hisa'; 
 
   final Map<String, dynamic> _financialData = {
-    'salio_total': '23,450',
-    'hisa_amount': '12,000',
-    'jamii_amount': '11,450',
-    // Detailed debt breakdown:
+    'salio_total': 23450, 
+    'hisa_amount': 12000, 
+    'jamii_amount': '11,450', 
+
     'madeni_hisa_amount': '2,000',
     'madeni_jamii_amount': '500',
   };
 
-  
   final List<Map<String, dynamic>> _quickActions = [
-    {'label': 'Changia', 'icon': Icons.transfer_within_a_station},
-    {'label': 'Uliza', 'icon': Icons.help_outline},
-    {'label': 'Mawasiliano', 'icon': Icons.contact_support_outlined},
-    {'label': 'Kuhusu Kikundi', 'icon': Icons.group_outlined},
+    {'label': 'Changia', 'icon': Icons.transfer_within_a_station, 'routeName': '/changia'},
+    {'label': 'Uliza', 'icon': Icons.help_outline, 'routeName': null}, 
+    {'label': 'Mawasiliano', 'icon': Icons.contact_support_outlined, 'routeName': null}, 
+    {'label': 'Kuhusu Kikundi', 'icon': Icons.group_outlined, 'routeName': null}, 
   ];
+
+  String _calculateHisaUnits(int amount) {
+    if (amount <= 0) return '0.00 hisa';
+    double units = amount / hisaValue;
+    return '${units.toStringAsFixed(2)} hisa';
+  }
 
   
   Widget _buildAccountCard({
     required String title,
-    required String amount,
+    required dynamic amount,
     required Color backgroundColor,
     required Color textColor,
+    String? subText, 
   }) {
+
+    String formattedAmount = amount is int 
+        ? amount.toString()
+        : amount;
+        
+    if (title == 'Hisa' && amount is int) {
+      subText = _calculateHisaUnits(amount);
+    }
+    
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -70,13 +87,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 5),
             Text(
-              amount,
+              formattedAmount,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: textColor,
               ),
             ),
+            if (subText != null) ...[
+              const SizedBox(height: 5),
+              Text(
+                subText,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: textColor.withOpacity(0.7),
+                ),
+              ),
+            ]
           ],
         ),
       ),
@@ -119,44 +147,50 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  
   Widget _buildQuickActionButton({
     required String label,
     required IconData icon,
+    VoidCallback? onTap, 
   }) {
     return Expanded(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: _primaryGreen,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+      child: InkWell( 
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(15),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: _primaryGreen,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon,
+                color: _whiteText, 
+                size: 30,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: _whiteText, 
-              size: 30,
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: _primaryGreen,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: _primaryGreen,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -169,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
         
     final String currentDebtLabel = _selectedDebtType == 'Hisa' 
         ? 'Mkopo wa Hisa' 
-        : 'Mkopo wa Jamii';
+        : 'Mkopo wa Jamii'; 
 
     return Scaffold(
       backgroundColor:Colors.white, 
@@ -205,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  _financialData['salio_total']!,
+                  _financialData['salio_total'].toString(), // Inahitaji kubadilishwa kuwa string
                   style: const TextStyle(
                     color: _primaryGreen,
                     fontSize: 32,
@@ -224,6 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   amount: _financialData['hisa_amount']!,
                   backgroundColor: _primaryGreen,
                   textColor: _whiteText,
+                  // subText itahesabiwa ndani ya _buildAccountCard
                 ),
                 _buildAccountCard(
                   title: 'Jamii',
@@ -316,6 +351,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 return _buildQuickActionButton(
                   label: action['label'],
                   icon: action['icon'],
+                  onTap: action['routeName'] != null
+                      ? () {
+
+                          Navigator.pushNamed(context, action['routeName']);
+                        }
+                      : null, 
                 );
               }).toList(),
             ),
