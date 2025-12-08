@@ -33,6 +33,11 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
   double _currentLoanPrincipal = 0.0;
   String _calculatedRepayment = '0.00';
   String _calculatedInterest = '0.00';
+
+  int _loanDurationMonths=12;
+  final List<int> _availableDurations = [3,6,12,18,24,36];
+  String _calculatedMonthlyRepayment = '0';
+
  
 
   @override
@@ -41,6 +46,7 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
     // Calculate the max limit immediately
     _maxLoanLimit = _memberHisaBalance * _maxLoanMultiplier;
     _amountController.addListener(_calculateLoanBreakdown);
+    _calculateLoanBreakdown();
   }
 
   void _calculateLoanBreakdown() {
@@ -50,17 +56,20 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
     if (principal != null && principal > 0) {
       final double interestAmount = principal * _interestRate;
       final double totalRepayment = principal + interestAmount;
+      final double monthlyRepayment = totalRepayment / _loanDurationMonths;
 
       setState(() {
         _currentLoanPrincipal = principal;
         _calculatedInterest = interestAmount.toStringAsFixed(2);
         _calculatedRepayment = totalRepayment.toStringAsFixed(2);
+        _calculatedMonthlyRepayment = monthlyRepayment.toStringAsFixed(2);
       });
     } else {
       setState(() {
         _currentLoanPrincipal = 0.0;
         _calculatedInterest = '0.00';
         _calculatedRepayment = '0.00';
+        _calculatedMonthlyRepayment = '0.00';
       });
     }
   }
@@ -95,7 +104,7 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Maombi ya mkopo ya ${_amountController.text} TSh (Jumla ya Malipo: ${_calculatedRepayment} TSh) yamepokelewa.'),
+            content: Text('Maombi ya mkopo ya ${_amountController.text} TSh kwa muda wa $_loanDurationMonths miezi (Jumla ya Malipo: ${_calculatedRepayment} TSh) yamepokelewa.'),
             backgroundColor: _vibrantGreen,
           ),
         );
@@ -140,6 +149,47 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
       validator: validator,
     );
   }
+  Widget _buildDurationDropdown() {
+    return DropdownButtonFormField<int>(
+      decoration: InputDecoration(
+        labelText: 'Muda wa Mkopo (Miezi)',
+        labelStyle: const TextStyle(color: _primaryGreen),
+        filled: true,
+        fillColor: _white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        prefixIcon: const Icon(Icons.calendar_today, color: _primaryGreen),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: _primaryGreen.withOpacity(0.3)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: _primaryGreen, width: 2),
+        ),
+      ),
+      value: _loanDurationMonths,
+      items: _availableDurations.map((int duration) {
+        return DropdownMenuItem<int>(
+          value: duration,
+          child: Text('$duration Miezi'),
+        );
+      }).toList(),
+      onChanged: (int? newValue) {
+        if (newValue != null) {
+          setState(() {
+            _loanDurationMonths = newValue;
+            _calculateLoanBreakdown(); 
+          });
+        }
+      },
+      validator: (value) {
+        if (value == null) {
+          return 'Tafadhali chagua muda wa mkopo';
+        }
+        return null;
+      },
+    );
+  }
 
 
   Widget _buildLoanSummaryCard() {
@@ -169,13 +219,15 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
           
           _buildSummaryRow('Kiasi Ulichoomba', _currentLoanPrincipal.toStringAsFixed(2), Colors.yellow.shade200),
           _buildSummaryRow('Riba (10% Flat)', _calculatedInterest, Colors.red.shade300),
+          _buildSummaryRow('Muda wa Mkopo', '$_loanDurationMonths', _white, isCurrency: false),
+          _buildSummaryRow('Malipo ya Kila Mwezi', _calculatedMonthlyRepayment, Colors.blue.shade300),
           _buildSummaryRow('Jumla ya Malipo', _calculatedRepayment, _vibrantGreen, isTotal: true),
         ],
       ),
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, Color valueColor, {bool isTotal = false}) {
+  Widget _buildSummaryRow(String label, String value, Color valueColor, {bool isTotal = false, bool isCurrency = true}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -190,7 +242,7 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
             ),
           ),
           Text(
-            '$value TSh',
+            '$value ${isCurrency ? 'TSh' : 'Miezi'}',
             style: TextStyle(
               fontSize: isTotal ? 18 : 16,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
@@ -279,6 +331,8 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                 },
               ),
               const SizedBox(height: 20),
+              _buildDurationDropdown(),
+              const SizedBox(height: 20),
 
               _buildLoanSummaryCard(),
               
@@ -314,7 +368,7 @@ class _HisaApplicationFormState extends State<HisaApplicationForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty || value.length < 5) {
-                    return 'Tafadhali thibitisha makubaliano kwa kuandika neno "Nakubali" au maelezo ya malipo.';
+                    return 'Tafadhali thibitisha kwa kuandika "Nakubali" au maelezo ya malipo.';
                   }
                   return null;
                 },

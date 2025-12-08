@@ -17,11 +17,11 @@ class _LoginScreenState extends State<LoginScreen>
   late AnimationController _animationController;
   late Animation<double> _animation; 
 
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  static const String _testEmail = 'inuka@gmail.com';
+  static const String _testPhoneNumber = '0752009001'; 
   static const String _testPassword = '2025';
 
   @override
@@ -47,13 +47,13 @@ class _LoginScreenState extends State<LoginScreen>
       _isLoading = true;
     });
 
-    final email = _emailController.text.trim();
+    final phone = _phoneController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
+    if (phone.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Email na nywila haziwezi kuachwa wazi'),
+          content: Text('Namba ya simu na nywila haziwezi kuachwa wazi'),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -66,10 +66,10 @@ class _LoginScreenState extends State<LoginScreen>
     await Future.delayed(const Duration(milliseconds: 1500));
 
     try {
-      if (email == _testEmail && password == _testPassword) {
+      if (phone == _testPhoneNumber && password == _testPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Login Successful'),
+            content: const Text('Umefaulu Kuingia'),
             backgroundColor: _mediumGreen, 
             duration: const Duration(seconds: 2),
           ),
@@ -77,17 +77,17 @@ class _LoginScreenState extends State<LoginScreen>
         await Future.delayed(const Duration(seconds: 1));
         Navigator.pushReplacementNamed(context, '/main');
 
-      } else if (email == _testEmail) {
+      } else if (phone == _testPhoneNumber) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Invalid credentials (Incorrect Password)'),
+            content: Text('Nywila si sahihi'), // Invalid credentials (Incorrect Password)
             backgroundColor: Colors.redAccent,
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('User not found (Try $_testEmail)'),
+            content: Text('Mwanachama hajapatikana (Jaribu $_testPhoneNumber)'),
             backgroundColor: Colors.deepOrangeAccent,
           ),
         );
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen>
     } catch (e) {
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Simulated Error: $e'), backgroundColor: Colors.red),
+        SnackBar(content: Text('Kosa Lililobuniwa: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -142,14 +142,14 @@ class _LoginScreenState extends State<LoginScreen>
                   const SizedBox(height: 40),
 
                   TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone, 
                     style: const TextStyle(color: _primaryGreen),
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'Namba ya Simu',
                       labelStyle: const TextStyle(color: _mediumGreen), 
                       prefixIcon: const Icon(
-                        Icons.email,
+                        Icons.phone_android,
                         color: _primaryGreen, 
                       ),
                       filled: true,
@@ -278,7 +278,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   void dispose() {
-    _emailController.dispose();
+
+    _phoneController.dispose();
     _passwordController.dispose();
     _animationController.dispose();
     super.dispose();

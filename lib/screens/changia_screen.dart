@@ -76,9 +76,9 @@ class _ContributionsScreenState extends State<ContributionsScreen> {
       if (sharesAmount > 0 && jamiiAmount > 0) {
         message = 'Umenunua Hisa ${sharesAmount.toStringAsFixed(0)} na kuchangia Jamii ${_jamiiController.text} TSh.';
       } else if (sharesAmount > 0) {
-        message = 'Umenunua Hisa ${sharesAmount.toStringAsFixed(0)} kwa mafanikio!';
+        message = 'Umenunua Hisa ${sharesAmount.toStringAsFixed(0)} !';
       } else if (jamiiAmount > 0) {
-        message = 'Umechanga Jamii ${_jamiiController.text} TSh kwa mafanikio!';
+        message = 'Umechanga Jamii ${_jamiiController.text} TSh !';
       } else {
          message = 'Tafadhali weka kiasi cha kuchangia.';
       }
@@ -162,7 +162,7 @@ class _ContributionsScreenState extends State<ContributionsScreen> {
               _buildTextField(
                 controller: _sharesController,
                 labelText: 'Idadi ya Hisa za Kununua',
-                hintText: 'Mfano: 5 (Hisa 5 = 50,000 TSh)',
+                hintText: '1=3000',
                 icon: Icons.storefront_outlined,
                 validator: (value) {
                   if (_sharesController.text.isEmpty && _jamiiController.text.isEmpty) {

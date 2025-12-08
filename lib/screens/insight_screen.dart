@@ -143,9 +143,9 @@ class InsightScreen extends StatelessWidget {
                 spacing: 10,
                 children: [
                   _buildLegendItem(
-                      color: Colors.blueGrey, label: 'Kikamilifu (Paid)'),
+                      color: Colors.greenAccent, label: 'Kikamilifu (Paid)'),
                   _buildLegendItem(
-                      color: _red.withOpacity(0.8), label: 'Salio (Remaining)'),
+                      color: _orange.withOpacity(0.8), label: 'Salio (Remaining)'),
                 ],
               )
             ],
@@ -378,7 +378,7 @@ class _PieChartPainter extends CustomPainter {
 
 
     final paidPaint = Paint()
-      ..color = Colors.blueGrey.withOpacity(0.8)
+      ..color = Colors.greenAccent.withOpacity(0.8)
       ..style = PaintingStyle.fill;
 
     canvas.drawArc(
@@ -390,7 +390,7 @@ class _PieChartPainter extends CustomPainter {
     );
 
     final remainingPaint = Paint()
-      ..color = InsightScreen._red.withOpacity(0.8)
+      ..color = InsightScreen._orange.withOpacity(0.8)
       ..style = PaintingStyle.fill;
 
     canvas.drawArc(

@@ -30,9 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Map<String, dynamic>> _quickActions = [
     {'label': 'Changia', 'icon': Icons.transfer_within_a_station, 'routeName': '/changia'},
-    {'label': 'Uliza', 'icon': Icons.help_outline, 'routeName': null}, 
-    {'label': 'Mawasiliano', 'icon': Icons.contact_support_outlined, 'routeName': null}, 
-    {'label': 'Kuhusu Kikundi', 'icon': Icons.group_outlined, 'routeName': null}, 
+    {'label': 'Uliza', 'icon': Icons.help_outline, 'routeName': '/uliza'}, 
+    {'label': 'Mawasiliano', 'icon': Icons.contact_support_outlined, 'routeName': '/contact'}, 
+    {'label': 'Kuhusu Kikundi', 'icon': Icons.group_outlined, 'routeName': '/about'}, 
   ];
 
   String _calculateHisaUnits(int amount) {
