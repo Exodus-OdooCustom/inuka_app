@@ -12,6 +12,8 @@ import 'package:inuka_app/screens/changia_screen.dart';
 import 'package:inuka_app/screens/about_screen.dart';
 import 'package:inuka_app/screens/Uliza_screen.dart';
 import 'package:inuka_app/screens/contact_details.dart';
+import 'package:inuka_app/screens/salio_jamii_details.dart';
+import 'package:inuka_app/screens/salio_hisa_details.dart';
 
 import 'dart:async';
 
@@ -81,6 +83,8 @@ class MyApp extends StatelessWidget {
         '/about':(context) =>  AboutGroupScreen(),
         '/uliza':(context) =>  const AskScreen(),
         '/contact':(context) =>  ContactDetailsScreen(),
+        '/salio_details':(context) =>  const SalioJamiiDetailsPage(),
+        '/salio_hisa':(context) =>  const SalioHisaDetailsPage(),
       },
     );
   }

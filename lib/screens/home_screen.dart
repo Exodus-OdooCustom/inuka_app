@@ -29,8 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   };
 
   final List<Map<String, dynamic>> _quickActions = [
-    {'label': 'Changia', 'icon': Icons.transfer_within_a_station, 'routeName': '/changia'},
-    {'label': 'Uliza', 'icon': Icons.help_outline, 'routeName': '/uliza'}, 
+    {'label': 'Changia', 'icon': Icons.transfer_within_a_station, 'routeName': '/salio_details'},
+    {'label': 'Uliza', 'icon': Icons.help_outline, 'routeName': '/salio_hisa'}, 
     {'label': 'Mawasiliano', 'icon': Icons.contact_support_outlined, 'routeName': '/contact'}, 
     {'label': 'Kuhusu Kikundi', 'icon': Icons.group_outlined, 'routeName': '/about'}, 
   ];
@@ -239,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  _financialData['salio_total'].toString(), // Inahitaji kubadilishwa kuwa string
+                  _financialData['salio_total'].toString(), 
                   style: const TextStyle(
                     color: _primaryGreen,
                     fontSize: 32,
@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   amount: _financialData['hisa_amount']!,
                   backgroundColor: _primaryGreen,
                   textColor: _whiteText,
-                  // subText itahesabiwa ndani ya _buildAccountCard
+
                 ),
                 _buildAccountCard(
                   title: 'Jamii',
