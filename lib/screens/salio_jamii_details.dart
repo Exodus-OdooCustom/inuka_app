@@ -18,11 +18,11 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
   
   // --- Mock Data ---
   final _mockContributions = const [
-    {'date': '2025-09-01', 'amount': 50000.0, 'description': 'Monthly Jamii Contribution'},
-    {'date': '2025-08-15', 'amount': 25000.0, 'description': 'Mid-Month Jamii Payment'},
-    {'date': '2025-08-01', 'amount': 50000.0, 'description': 'Monthly Jamii Contribution'},
-    {'date': '2025-07-01', 'amount': 50000.0, 'description': 'Monthly Jamii Contribution'},
-    {'date': '2025-06-01', 'amount': 50000.0, 'description': 'Monthly Jamii Contribution'},
+    {'date': '2025-09-01', 'amount': 50000.0, 'description': 'Mchango wa jamii wa mwezi'},
+    {'date': '2025-08-15', 'amount': 25000.0, 'description': 'Mchango jamii katikati ya mwezi'},
+    {'date': '2025-08-01', 'amount': 50000.0, 'description': 'Mchango wa jamii wa mwezi'},
+    {'date': '2025-07-01', 'amount': 50000.0, 'description': 'Mchango wa jamii wa mwezi'},
+    {'date': '2025-06-01', 'amount': 50000.0, 'description': 'Mchango wa jamii wa mwezi'},
   ];
 
   List<Map<String, dynamic>> _requestHistory = [
@@ -76,7 +76,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
     if (_startDate.isAfter(_endDate)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Error: "From Date" cannot be after "To Date".'),
+          content: Text('Error: "From Date" haiwezi kuwa "To Date".'),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -102,7 +102,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Statement request submitted successfully!'),
+        content: Text('Maombi ya historia ya michango yametumwa!'),
         backgroundColor: _mediumGreen,
       ),
     );
@@ -163,7 +163,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
             Icon(Icons.account_balance_wallet, color: _primaryGreen, size: 24),
             SizedBox(width: 8),
             Text(
-              'Recent Contribution History (Mock)',
+              'Historia ya michango ya hivi karibuni',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
         ),
         const SizedBox(height: 10),
         ListView.builder(
-          physics: const NeverScrollableScrollPhysics(), // Important for nested scrolling
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: _mockContributions.length,
           itemBuilder: (context, index) {
@@ -212,7 +212,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
             Icon(Icons.history, color: _primaryGreen, size: 24),
             SizedBox(width: 8),
             Text(
-              'Statement Request History',
+              'Historia ya maombi ya hivi karibuni',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -225,12 +225,12 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
         if (_requestHistory.isEmpty)
           const Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text('No statement requests logged.'),
+            child: Text('Hakuna historia iliyopo kwa sasa.'),
           )
         else
           ..._requestHistory.map((req) {
-            final statusColor = req['status'] == 'Completed' ? Colors.green.shade700 : Colors.orange.shade700;
-            final statusBgColor = req['status'] == 'Completed' ? Colors.green.shade50 : Colors.orange.shade50;
+            final statusColor = req['status'] == 'imemalizika' ? Colors.green.shade700 : Colors.orange.shade700;
+            final statusBgColor = req['status'] == 'imemalizika' ? Colors.green.shade50 : Colors.orange.shade50;
 
             return Card(
               color: Colors.white,
@@ -245,7 +245,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Requested: ${req['requestedAt']}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text('Imeombwa: ${req['requestedAt']}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
@@ -261,7 +261,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Period:',
+                      'kipindi:',
                       style: TextStyle(fontWeight: FontWeight.w600, color: _primaryGreen.withOpacity(0.8)),
                     ),
                     Text(
@@ -285,7 +285,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
       backgroundColor: _lightGreen,
       appBar: AppBar(
         title: const Text(
-          'Salio Jamii Details',
+          'Maelezo ya Salio Jamii ',
           style: TextStyle(color: _primaryGreen, fontWeight: FontWeight.bold),
         ),
         backgroundColor: _lightGreen,
@@ -315,7 +315,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Total Current Contributions', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  const Text('Jumla ya michango ya sasa', style: TextStyle(fontSize: 14, color: Colors.grey)),
                   const SizedBox(height: 4),
                   Text(
                     _formatTsh(totalContributions),
@@ -327,7 +327,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'This includes all contributions to date.',
+                    'Hii inajumuisha michango yote mpaka sasa.',
                     style: TextStyle(fontSize: 12, color: _mediumGreen),
                   ),
                 ],
@@ -353,7 +353,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Request Official Statement',
+                    'Omba taarifa',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _primaryGreen),
                   ),
                   const Divider(color: _lightGreen, thickness: 1, height: 20),
@@ -361,7 +361,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                     children: [
                       Expanded(
                         child: _buildDateField(
-                          label: 'From Date (X)',
+                          label: 'Kutoka tarehe',
                           date: _startDate,
                           onTap: () => _selectDate(context, true),
                         ),
@@ -369,7 +369,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                       const SizedBox(width: 15),
                       Expanded(
                         child: _buildDateField(
-                          label: 'To Date (Y)',
+                          label: 'Hadi tarehe',
                           date: _endDate,
                           onTap: () => _selectDate(context, false),
                         ),
@@ -394,7 +394,7 @@ class _SalioJamiiDetailsPageState extends State<SalioJamiiDetailsPage> {
                               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
                             )
                           : const Text(
-                              'Submit Statement Request',
+                              'Tuma ombi',
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                     ),

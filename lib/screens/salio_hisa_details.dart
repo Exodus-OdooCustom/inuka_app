@@ -5,19 +5,18 @@ class SalioHisaDetailsPage extends StatefulWidget {
   const SalioHisaDetailsPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
+  
   _SalioHisaDetailsPageState createState() => _SalioHisaDetailsPageState();
 }
 
 class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
   // --- Constants and Color Palette ---
   static const double HISHA_VALUE_TSHS = 3000.0;
-  static const Color _primaryGreen = Color(0xFF1B5E20); // Deep Green
-  static const Color _mediumGreen = Color(0xFF4CAF50); // Medium Green
-  static const Color _lightGreen = Color(0xFFE8F5E9); // Light Background
-  static const Color _vibrantGreen = Color(0xFF8BC34A); // Vibrant Accent
+  static const Color _primaryGreen = Color(0xFF1B5E20);
+  static const Color _mediumGreen = Color(0xFF4CAF50); 
+  static const Color _lightGreen = Color(0xFFE8F5E9); 
+  static const Color _vibrantGreen = Color(0xFF8BC34A); 
   
-  // --- Mock Data: Purchase Amount and Date ---
   final List<Map<String, dynamic>> _mockHisaPurchases = const [
     {'date': '2025-09-01', 'amount': 150000.0},
     {'date': '2025-08-15', 'amount': 90000.0},
@@ -30,7 +29,6 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
     {'date': '2025-02-01', 'amount': 180000.0},
   ];
 
-  // --- State for Filtering ---
   DateTime _startDate = DateTime.now().subtract(const Duration(days: 90));
   DateTime _endDate = DateTime.now();
   bool _isFiltering = false;
@@ -42,7 +40,6 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
     _applyFilter();
   }
 
-  // --- Utility Functions ---
 
   String _formatTsh(double value) {
     final formatter = NumberFormat.currency(locale: 'sw_TZ', symbol: 'TZS', decimalDigits: 0);
@@ -58,19 +55,15 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
       _isFiltering = true;
     });
 
-    // Simple, synchronous filtering based on date range
     final filtered = _mockHisaPurchases.where((purchase) {
       final purchaseDate = DateTime.parse(purchase['date'] as String);
-      // We compare dates only (ignore time components)
       final start = DateTime(_startDate.year, _startDate.month, _startDate.day);
       final end = DateTime(_endDate.year, _endDate.month, _endDate.day);
 
-      // Check if purchase date is within the range [start, end]
       return (purchaseDate.isAtSameMomentAs(start) || purchaseDate.isAfter(start)) &&
              (purchaseDate.isAtSameMomentAs(end) || purchaseDate.isBefore(end));
     }).toList();
 
-    // Sort by date (newest first)
     filtered.sort((a, b) => DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])));
 
     setState(() {
@@ -86,7 +79,6 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
       builder: (context, child) {
-        // Apply the green theme to the DatePicker dialog
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
@@ -109,11 +101,10 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
           _endDate = picked;
         }
       });
-      _applyFilter(); // Re-apply filter immediately after date selection
+      _applyFilter();
     }
   }
 
-  // --- Widget Builders ---
 
   Widget _buildDateField({
     required String label,
@@ -175,7 +166,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
         padding: EdgeInsets.all(16.0),
         child: Center(
           child: Text(
-            'No Hisa purchases found in the selected date range.',
+            'Hakuna hisa zilizonunuliwa kwa kipind ulichochagua.',
             style: TextStyle(fontSize: 16, color: Colors.grey),
             textAlign: TextAlign.center,
           ),
@@ -201,16 +192,16 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
             leading: CircleAvatar(
               backgroundColor: _vibrantGreen,
               child: Text(
-                hisaCount.toStringAsFixed(0), // Display Hisa count
+                hisaCount.toStringAsFixed(0), 
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
               ),
             ),
             title: Text(
-              'Hisa Purchased',
+              'Hisa Zilizonunuliwa',
               style: const TextStyle(fontWeight: FontWeight.w600, color: _primaryGreen),
             ),
             subtitle: Text(
-              'Date: ${item['date']} | ${hisaCount.toStringAsFixed(0)} Shares',
+              'Tarehe: ${item['date']} | ${hisaCount.toStringAsFixed(0)} hisa',
               style: TextStyle(color: _primaryGreen.withOpacity(0.7)),
             ),
             trailing: Column(
@@ -242,7 +233,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
       backgroundColor: _lightGreen,
       appBar: AppBar(
         title: const Text(
-          'Salio Hisa Details (Shares)',
+          'Salio Hisa ',
           style: TextStyle(color: _primaryGreen, fontWeight: FontWeight.bold),
         ),
         backgroundColor: _lightGreen,
@@ -254,7 +245,6 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- Header Card: Total Shares ---
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -273,7 +263,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Total Hisa (Shares) Purchased', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                  const Text('Jumla ya hisa zilizonunuliwa', style: TextStyle(fontSize: 14, color: Colors.grey)),
                   const SizedBox(height: 4),
                   Text(
                     '${totalHisaCount.toStringAsFixed(0)} Hisa',
@@ -285,7 +275,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Equivalent Value: ${_formatTsh(totalContributionTshs)} (1 Hisa = ${_formatTsh(HISHA_VALUE_TSHS)})',
+                    'Thamani sawa na: ${_formatTsh(totalContributionTshs)} (1 Hisa = ${_formatTsh(HISHA_VALUE_TSHS)})',
                     style: const TextStyle(fontSize: 12, color: _mediumGreen),
                   ),
                 ],
@@ -293,7 +283,6 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
             ),
             const SizedBox(height: 25),
 
-            // --- Date Filter Form ---
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -312,7 +301,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Filter Purchase History by Duration',
+                    'Tazama manunuzi ya hisa kulingana na muda',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _primaryGreen),
                   ),
                   const Divider(color: _lightGreen, thickness: 1, height: 20),
@@ -320,7 +309,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
                     children: [
                       Expanded(
                         child: _buildDateField(
-                          label: 'From Date (Start)',
+                          label: 'Kuanzia',
                           date: _startDate,
                           onTap: () => _selectDate(context, true),
                         ),
@@ -328,7 +317,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
                       const SizedBox(width: 15),
                       Expanded(
                         child: _buildDateField(
-                          label: 'To Date (End)',
+                          label: 'Hadi',
                           date: _endDate,
                           onTap: () => _selectDate(context, false),
                         ),
@@ -338,7 +327,7 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
                   const SizedBox(height: 10),
                   const Center(
                     child: Text(
-                      'Selecting a date automatically applies the filter.',
+                      'Kuchagua tarehe inachagua taarifa zinazohusiana.',
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ),
@@ -347,13 +336,12 @@ class _SalioHisaDetailsPageState extends State<SalioHisaDetailsPage> {
             ),
             const SizedBox(height: 25),
 
-            // --- Hisa Purchase History List ---
             Row(
               children: [
                 const Icon(Icons.trending_up, color: _primaryGreen, size: 24),
                 const SizedBox(width: 8),
                 Text(
-                  'Hisa Purchase History (${_filteredHisaPurchases.length} Records)',
+                  'Historia ya manunuzi ya hisa (${_filteredHisaPurchases.length} rekodi)',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

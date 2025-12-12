@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'contributions_screen.dart'; 
+// import 'contributions_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,31 +9,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const Color _primaryGreen = Color(0xFF1B5E20); 
-  static const Color _mediumGreen = Color(0xFF4CAF50); 
-  static const Color _vibrantGreen = Color(0xFF8BC34A); 
-  static const Color _lightGreen = Color(0xFFE8F5E9); 
+  static const Color _primaryGreen = Color(0xFF1B5E20);
+  static const Color _mediumGreen = Color(0xFF4CAF50);
+  static const Color _vibrantGreen = Color(0xFF8BC34A);
+  static const Color _lightGreen = Color(0xFFE8F5E9);
   static const Color _whiteText = Colors.white;
 
-  static const int hisaValue = 3000; 
-  
-  String _selectedDebtType = 'Hisa'; 
+  static const int hisaValue = 3000;
+
+  String _selectedDebtType = 'Hisa';
 
   final Map<String, dynamic> _financialData = {
-    'salio_total': 23450, 
-    'hisa_amount': 12000, 
-    'jamii_amount': '11,450', 
-
+    'salio_total': 37000,
+    'hisa_amount': 12000,
+    'jamii_amount': 11450,
+    'amana_amount': 5050,
+    'akiba_amount': 8500,
     'madeni_hisa_amount': '2,000',
     'madeni_jamii_amount': '500',
   };
 
-  final List<Map<String, dynamic>> _quickActions = [
-    {'label': 'Changia', 'icon': Icons.transfer_within_a_station, 'routeName': '/salio_details'},
-    {'label': 'Uliza', 'icon': Icons.help_outline, 'routeName': '/salio_hisa'}, 
-    {'label': 'Mawasiliano', 'icon': Icons.contact_support_outlined, 'routeName': '/contact'}, 
-    {'label': 'Kuhusu Kikundi', 'icon': Icons.group_outlined, 'routeName': '/about'}, 
-  ];
+  // final List<Map<String, dynamic>> _quickActions = [
+  //   {
+  //     'label': 'Changia',
+  //     'icon': Icons.transfer_within_a_station,
+  //     'routeName': '/salio_details'
+  //   },
+  //   {
+  //     'label': 'Uliza',
+  //     'icon': Icons.help_outline,
+  //     'routeName': '/salio_hisa'
+  //   },
+  //   {
+  //     'label': 'Mawasiliano',
+  //     'icon': Icons.contact_support_outlined,
+  //     'routeName': '/contact'
+  //   },
+  //   {
+  //     'label': 'Kuhusu Kikundi',
+  //     'icon': Icons.group_outlined,
+  //     'routeName': '/about'
+  //   },
+  // ];
 
   String _calculateHisaUnits(int amount) {
     if (amount <= 0) return '0.00 hisa';
@@ -41,76 +58,82 @@ class _HomeScreenState extends State<HomeScreen> {
     return '${units.toStringAsFixed(2)} hisa';
   }
 
-  
   Widget _buildAccountCard({
     required String title,
     required dynamic amount,
     required Color backgroundColor,
     required Color textColor,
-    String? subText, 
+    String? subText,
+    VoidCallback? onTap,
   }) {
-
-    String formattedAmount = amount is int 
-        ? amount.toString()
+    String formattedAmount = amount is int
+        ? amount.toString().replaceAllMapped(
+            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+            (Match m) => '${m[1]},',
+          )
         : amount;
-        
+
     if (title == 'Hisa' && amount is int) {
       subText = _calculateHisaUnits(amount);
     }
-    
+
     return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: textColor.withOpacity(0.8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          margin:
+              const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
               ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              formattedAmount,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: textColor,
-              ),
-            ),
-            if (subText != null) ...[
-              const SizedBox(height: 5),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                subText,
+                title,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: textColor.withOpacity(0.7),
+                  color: textColor.withOpacity(0.8),
                 ),
               ),
-            ]
-          ],
+              const SizedBox(height: 5),
+              Text(
+                formattedAmount,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
+              ),
+              if (subText != null) ...[
+                const SizedBox(height: 5),
+                Text(
+                  subText,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: textColor.withOpacity(0.7),
+                  ),
+                ),
+              ]
+            ],
+          ),
         ),
       ),
     );
   }
-
 
   Widget _buildDebtToggle(String label, String debtType) {
     final bool isSelected = _selectedDebtType == debtType;
@@ -121,7 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: isSelected ? _vibrantGreen : _lightGreen,
@@ -129,7 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
           border: Border.all(color: _primaryGreen, width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isSelected ? 0.2 : 0.05),
+              color: Colors.black
+                  .withOpacity(isSelected ? 0.2 : 0.05),
               spreadRadius: 1,
               blurRadius: 3,
             ),
@@ -139,7 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
           label,
           style: TextStyle(
             color: isSelected ? _whiteText : _primaryGreen,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+            fontWeight:
+                isSelected ? FontWeight.bold : FontWeight.w600,
             fontSize: 14,
           ),
         ),
@@ -147,14 +173,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  
   Widget _buildQuickActionButton({
     required String label,
     required IconData icon,
-    VoidCallback? onTap, 
+    VoidCallback? onTap,
   }) {
     return Expanded(
-      child: InkWell( 
+      child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(15),
         child: Column(
@@ -175,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Icon(
                 icon,
-                color: _whiteText, 
+                color: _whiteText,
                 size: 30,
               ),
             ),
@@ -197,25 +222,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String currentDebtAmount = _selectedDebtType == 'Hisa' 
-        ? _financialData['madeni_hisa_amount']!
-        : _financialData['madeni_jamii_amount']!;
-        
-    final String currentDebtLabel = _selectedDebtType == 'Hisa' 
-        ? 'Mkopo wa Hisa' 
-        : 'Mkopo wa Jamii'; 
+    final String currentDebtAmount =
+        _selectedDebtType == 'Hisa'
+            ? _financialData['madeni_hisa_amount']!
+            : _financialData['madeni_jamii_amount']!;
+
+    final String currentDebtLabel =
+        _selectedDebtType == 'Hisa'
+            ? 'Mkopo wa Hisa'
+            : 'Mkopo wa Jamii';
 
     return Scaffold(
-      backgroundColor:Colors.white, 
-      
-
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-
 
             const Text(
               'Taarifa za michango',
@@ -226,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 15),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -239,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  _financialData['salio_total'].toString(), 
+                  _financialData['salio_total'].toString(),
                   style: const TextStyle(
                     color: _primaryGreen,
                     fontSize: 32,
@@ -248,29 +272,58 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
-
-            Row(
+            Column(
               children: [
-                _buildAccountCard(
-                  title: 'Hisa',
-                  amount: _financialData['hisa_amount']!,
-                  backgroundColor: _primaryGreen,
-                  textColor: _whiteText,
-
+                Row(
+                  children: [
+                    _buildAccountCard(
+                      title: 'Hisa',
+                      amount: _financialData['hisa_amount']!,
+                      backgroundColor: _primaryGreen,
+                      textColor: _whiteText,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/salio_hisa');
+                      },
+                    ),
+                    _buildAccountCard(
+                      title: 'Jamii',
+                      amount: _financialData['jamii_amount']!,
+                      backgroundColor: _primaryGreen,
+                      textColor: _whiteText,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/salio_details');
+                      },
+                    ),
+                  ],
                 ),
-                _buildAccountCard(
-                  title: 'Jamii',
-                  amount: _financialData['jamii_amount']!,
-                  backgroundColor: _primaryGreen, 
-                  textColor: _whiteText,
+                Row(
+                  children: [
+                    _buildAccountCard(
+                      title: 'Amana',
+                      amount: _financialData['amana_amount']!,
+                      backgroundColor: _primaryGreen,
+                      textColor: _whiteText,
+                      onTap: () {
+                        debugPrint('Amana Card Clicked');
+                      },
+                    ),
+                    _buildAccountCard(
+                      title: 'Akiba',
+                      amount: _financialData['akiba_amount']!,
+                      backgroundColor: _primaryGreen,
+                      textColor: _whiteText,
+                      onTap: () {
+                        debugPrint('Akiba Card Clicked');
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
 
             const SizedBox(height: 40),
-
 
             const Text(
               'Madeni',
@@ -295,9 +348,10 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: _primaryGreen.withOpacity(0.8), 
+                color: _primaryGreen.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: _mediumGreen.withOpacity(0.5)),
+                border: Border.all(
+                    color: _mediumGreen.withOpacity(0.5)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -311,11 +365,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    currentDebtLabel, 
+                    currentDebtLabel,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color:_whiteText,
+                      color: _whiteText,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -324,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.redAccent, 
+                      color: Colors.redAccent,
                     ),
                   ),
                 ],
@@ -333,38 +387,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 40),
 
+            // const Text(
+            //   'Huduma za Haraka',
+            //   style: TextStyle(
+            //     color: _primaryGreen,
+            //     fontSize: 18,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
 
-            const Text(
-              'Huduma za Haraka',
-              style: TextStyle(
-                color: _primaryGreen,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: _quickActions.map((action) {
-                return _buildQuickActionButton(
-                  label: action['label'],
-                  icon: action['icon'],
-                  onTap: action['routeName'] != null
-                      ? () {
-
-                          Navigator.pushNamed(context, action['routeName']);
-                        }
-                      : null, 
-                );
-              }).toList(),
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: _quickActions.map((action) {
+            //     return _buildQuickActionButton(
+            //       label: action['label'],
+            //       icon: action['icon'],
+            //       onTap: action['routeName'] != null
+            //           ? () {
+            //               Navigator.pushNamed(
+            //                   context, action['routeName']);
+            //             }
+            //           : null,
+            //     );
+            //   }).toList(),
+            // ),
             const SizedBox(height: 30),
           ],
         ),
       ),
-
     );
   }
 }
