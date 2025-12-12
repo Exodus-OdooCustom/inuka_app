@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inuka_app/screens/splash_screen.dart';
+// import 'package:inuka_app/screens/splash_screen.dart';
 import 'package:inuka_app/screens/login_screen.dart';
 import 'package:inuka_app/screens/register_screen.dart';
 import 'package:inuka_app/screens/home_screen.dart';
@@ -68,9 +68,9 @@ class MyApp extends StatelessWidget {
       ),
       
       
-      initialRoute: '/', 
+      initialRoute: '/login', 
       routes: {
-        '/': (context) => const SplashScreen(),
+        // '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
         '/register':(context)=> const RegisterScreen(),
         '/main': (context) => const MainLayout(),
