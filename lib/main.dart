@@ -14,6 +14,8 @@ import 'package:inuka_app/screens/Uliza_screen.dart';
 import 'package:inuka_app/screens/contact_details.dart';
 import 'package:inuka_app/screens/salio_jamii_details.dart';
 import 'package:inuka_app/screens/salio_hisa_details.dart';
+import 'package:inuka_app/screens/deni_hisa_details.dart';
+import 'package:inuka_app/screens/deni_jamii_details.dart';
 
 // import 'dart:async';
 
@@ -85,6 +87,8 @@ class MyApp extends StatelessWidget {
         '/contact':(context) =>  ContactDetailsScreen(),
         '/salio_details':(context) =>  const SalioJamiiDetailsPage(),
         '/salio_hisa':(context) =>  const SalioHisaDetailsPage(),
+        '/deni_hisa':(context) =>  const MadeniHisaDetailsScreen(),
+        '/deni_jamii':(context) =>  const DeniJamiiDetailsScreen(),
       },
     );
   }

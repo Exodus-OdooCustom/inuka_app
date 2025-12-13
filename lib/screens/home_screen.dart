@@ -25,32 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
     'jamii_amount': 11450,
     'amana_amount': 5050,
     'akiba_amount': 8500,
-    'madeni_hisa_amount': '2,000',
-    'madeni_jamii_amount': '500',
+    'madeni_hisa_amount': '11,00',
+    'madeni_jamii_amount': '8,000',
   };
-
-  // final List<Map<String, dynamic>> _quickActions = [
-  //   {
-  //     'label': 'Changia',
-  //     'icon': Icons.transfer_within_a_station,
-  //     'routeName': '/salio_details'
-  //   },
-  //   {
-  //     'label': 'Uliza',
-  //     'icon': Icons.help_outline,
-  //     'routeName': '/salio_hisa'
-  //   },
-  //   {
-  //     'label': 'Mawasiliano',
-  //     'icon': Icons.contact_support_outlined,
-  //     'routeName': '/contact'
-  //   },
-  //   {
-  //     'label': 'Kuhusu Kikundi',
-  //     'icon': Icons.group_outlined,
-  //     'routeName': '/about'
-  //   },
-  // ];
 
   String _calculateHisaUnits(int amount) {
     if (amount <= 0) return '0.00 hisa';
@@ -110,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 5),
               Text(
-                formattedAmount,
+                'Tsh $formattedAmount', 
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -255,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Salio',
+                  'Salio la Jumla',
                   style: TextStyle(
                     color: _primaryGreen,
                     fontSize: 18,
@@ -263,7 +240,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  _financialData['salio_total'].toString(),
+                  'Tsh ${_financialData['salio_total'].toString().replaceAllMapped(
+                    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                    (Match m) => '${m[1]},',
+                  )}', 
                   style: const TextStyle(
                     color: _primaryGreen,
                     fontSize: 32,
@@ -344,73 +324,95 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 15),
 
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: _primaryGreen.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                    color: _mediumGreen.withOpacity(0.5)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    currentDebtLabel,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+
+            InkWell(
+              onTap: () {
+                final String targetRoute = _selectedDebtType == 'Hisa'
+                    ? '/deni_hisa' 
+                    : '/deni_jamii'; 
+
+                Navigator.pushNamed(context, targetRoute);
+                debugPrint('Navigating to $targetRoute for $_selectedDebtType debt.');
+              },
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: _primaryGreen.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                      color: _mediumGreen.withOpacity(0.5)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          currentDebtLabel,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: _whiteText,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Tsh $currentDebtAmount',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios,
                       color: _whiteText,
+                      size: 18,
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    currentDebtAmount,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.redAccent,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
             const SizedBox(height: 40),
 
             // const Text(
-            //   'Huduma za Haraka',
-            //   style: TextStyle(
-            //     color: _primaryGreen,
-            //     fontSize: 18,
-            //     fontWeight: FontWeight.bold,
-            //   ),
+            //   'Huduma za Haraka',
+            //   style: TextStyle(
+            //     color: _primaryGreen,
+            //     fontSize: 18,
+            //     fontWeight: FontWeight.bold,
+            //   ),
             // ),
             // const SizedBox(height: 20),
 
             // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //   children: _quickActions.map((action) {
-            //     return _buildQuickActionButton(
-            //       label: action['label'],
-            //       icon: action['icon'],
-            //       onTap: action['routeName'] != null
-            //           ? () {
-            //               Navigator.pushNamed(
-            //                   context, action['routeName']);
-            //             }
-            //           : null,
-            //     );
-            //   }).toList(),
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: _quickActions.map((action) {
+            //     return _buildQuickActionButton(
+            //       label: action['label'],
+            //       icon: action['icon'],
+            //       onTap: action['routeName'] != null
+            //           ? () {
+            //               Navigator.pushNamed(
+            //                   context, action['routeName']);
+            //             }
+            //           : null,
+            //     );
+            //   }).toList(),
             // ),
             const SizedBox(height: 30),
           ],
