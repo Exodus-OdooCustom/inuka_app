@@ -3,47 +3,42 @@ import 'package:flutter/material.dart';
 class MadeniHisaDetailsScreen extends StatelessWidget {
   const MadeniHisaDetailsScreen({super.key});
 
-
   static const Color _primaryGreen = Color(0xFF1B5E20);
-  static const Color _mediumGreen = Color(0xFF4CAF50); 
-  static const Color _lightGreen = Color(0xFFE8F5E9); 
+  static const Color _mediumGreen = Color(0xFF4CAF50);
+  static const Color _lightGreen = Color(0xFFE8F5E9);
   static const Color _whiteText = Colors.white;
   static const Color _dangerRed = Colors.redAccent;
   static const Color _successGreen = Color(0xFF4CAF50);
+  static const Color _neutralBlue = Colors.blueGrey;
 
-  
+
   final int principalLoanAmount = 20000; 
-  
-  int get loanInsurance => (principalLoanAmount * 0.10).toInt();
-  int get totalInterest => (principalLoanAmount * 0.10).toInt();
-  int get disbursedAmount => principalLoanAmount - loanInsurance; 
+
+  int get loanInsurance => (principalLoanAmount * 0.03).toInt();
+  int get loanGuaranteeFee => (principalLoanAmount * 0.07).toInt();
+  int get totalDeduction => loanInsurance + loanGuaranteeFee;
+
+
+  int get totalInterest => (principalLoanAmount * 0.10).toInt(); 
+
+  int get disbursedAmount => principalLoanAmount - totalDeduction; 
   int get totalRepayableAmount => principalLoanAmount + totalInterest; 
 
-  final String loanDisbursementDate = '2024-08-15';
-  final String repaymentPeriod = '2 Months';
+  final String loanDisbursementDate = '2025-10-15';
+  final String repaymentPeriod = 'Miezi miwili';
   final int repaymentInstallment = 11000; 
-  
 
   final List<Map<String, dynamic>> repaymentHistory = const [
     {
-      'date': '2024-09-15',
+      'date': '2025-11-15', 
       'amount': 11000,
       'status': 'imelipwa',
-      'balance': 11000,
       'is_paid': true,
     },
     {
-      'date': '2025-10-15',
+      'date': '202-12-15', 
       'amount': 11000,
       'status': 'hakijalipwa',
-      'balance': 0,
-      'is_paid': false,
-    },
-    {
-      'date': '2025-11-15',
-      'amount': 11000,
-      'status': 'bado', 
-      'balance': 0,
       'is_paid': false,
     },
   ];
@@ -102,7 +97,7 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Maelezo ya Msingi ya Mkopo',
+            'Maelezo ya Msingi ya Mkopo wa Hisa',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -110,23 +105,33 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
             ),
           ),
           const Divider(color: _primaryGreen, height: 25),
+          
           _buildSummaryTile(
-            title: 'Kiasi Kilichoomwa (Principal)',
+            title: 'Kiasi Kilichoombwa (Principal)',
             value: _formatCurrency(principalLoanAmount),
             valueColor: _primaryGreen,
           ),
+
           _buildSummaryTile(
-            title: 'Bima ya Mkopo (10%)',
+            title: 'Bima ya Mkopo (3%)', 
             value: '- ${_formatCurrency(loanInsurance)}',
             valueColor: _dangerRed,
           ),
+          _buildSummaryTile(
+            title: 'Dhamana ya Mkopo (7%)', 
+            value: '- ${_formatCurrency(loanGuaranteeFee)}',
+            valueColor: _dangerRed.withOpacity(0.8),
+          ),
+
           _buildSummaryTile(
             title: 'Kiasi Kilichotolewa (Disbursed)',
             value: _formatCurrency(disbursedAmount),
             valueColor: _mediumGreen,
           ),
+          
           const SizedBox(height: 10),
           const Divider(color: _primaryGreen, height: 25),
+
           _buildSummaryTile(
             title: 'Riba Iliyoongezwa (10%)',
             value: '+ ${_formatCurrency(totalInterest)}',
@@ -149,7 +154,7 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           _buildSummaryTile(
-            title: 'Malipo kwa Kipindi',
+            title: 'Malipo kwa Kipindi (Monthly)',
             value: _formatCurrency(repaymentInstallment),
             valueColor: _primaryGreen,
           ),
@@ -185,7 +190,7 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Histori ya Marejesho',
+            'Histori ya Marejesho (Repayment Schedule)',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -225,11 +230,16 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
 
           ...repaymentHistory.map((item) {
             final isPaid = item['is_paid'] as bool;
+            String statusKey = item['status'] as String;
+            if (statusKey == 'imelipwa') statusKey = 'Paid';
+            else if (statusKey == 'hakijalipwa') statusKey = 'Outstanding';
+            else statusKey = 'Pending';
+            
             final Color statusColor = isPaid
                 ? _successGreen
-                : (item['status'] == 'Overdue' ? _dangerRed : _primaryGreen.withOpacity(0.7));
+                : (statusKey == 'Overdue' ? _dangerRed : _primaryGreen.withOpacity(0.7));
             
-            final IconData statusIcon = isPaid ? Icons.check_circle_outline : (item['status'] == 'Overdue' ? Icons.error_outline : Icons.pending_actions);
+            final IconData statusIcon = isPaid ? Icons.check_circle_outline : (statusKey == 'Overdue' ? Icons.error_outline : Icons.pending_actions);
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -260,7 +270,7 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    item['status'] as String,
+                    item['status'] as String, 
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: statusColor,
@@ -299,7 +309,7 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
             _buildRepaymentHistory(context),
 
             const SizedBox(height: 30),
-     
+      
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -319,33 +329,33 @@ class MadeniHisaDetailsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              // child: ElevatedButton(
-              //   onPressed: () {
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       SnackBar(
-              //         content: Text('Kurejesha Mkopo (Repay Loan) action triggered!'),
-              //         backgroundColor: _mediumGreen,
-              //         duration: const Duration(seconds: 2),
-              //       ),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.transparent,
-              //     shadowColor: Colors.transparent,
-              //     padding: const EdgeInsets.symmetric(vertical: 16),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30),
-              //     ),
-              //   ),
-              //   child: const Text(
-              //     'Kurejesha Mkopo',
-              //     style: TextStyle(
-              //       fontSize: 18,
-              //       fontWeight: FontWeight.bold,
-              //       color: _whiteText,
-              //     ),
-              //   ),
-              // ),
+              child: ElevatedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Kurejesha Mkopo (Repay Loan) !'),
+                      backgroundColor: _mediumGreen,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(
+                  'Kurejesha Mkopo',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: _whiteText,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
           ],
