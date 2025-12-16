@@ -152,7 +152,7 @@ class ProfileScreen extends StatelessWidget {
             _buildSectionCard(
               title: 'Taarifa za Malipo',
               icon: Icons.credit_card_outlined,
-              color: Colors.indigo,
+              color: Colors.blueGrey,
               content: Column(
                 children: paymentDetails.entries.map((entry) => _buildDetailRow(entry.key, entry.value)).toList(),
               ),
@@ -183,27 +183,27 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Umefanikiwa kutoka kwa wasifu wako!'), backgroundColor: _lightGreen),
-                  );
-                },
-                icon: const Icon(Icons.logout, color: Colors.white),
-                label: const Text('Toka (Sign Out)', style: TextStyle(color: Colors.white, fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _red,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 5,
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+            //   child: ElevatedButton.icon(
+            //     onPressed: () {
+            //       Navigator.popUntil(context, (route) => route.isFirst);
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         SnackBar(content: Text('Umefanikiwa kutoka kwa wasifu wako!'), backgroundColor: _lightGreen),
+            //       );
+            //     },
+            //     icon: const Icon(Icons.logout, color: Colors.white),
+            //     label: const Text('Toka (Sign Out)', style: TextStyle(color: Colors.white, fontSize: 16)),
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: _red,
+            //       padding: const EdgeInsets.symmetric(vertical: 15),
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //       ),
+            //       elevation: 5,
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 30),
           ],
         ),

@@ -70,38 +70,38 @@ class InsightScreen extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        Center(
-          child: Column(
-            children: [
-              const Text(
-                'Uwiano wa Mchango dhidi ya Faida',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: _darkGreen,
-                ),
-              ),
-              _buildBarChart(),
+        // Center(
+        //   child: Column(
+        //     children: [
+        //       const Text(
+        //         'Uwiano wa Mchango dhidi ya Faida',
+        //         style: TextStyle(
+        //           fontSize: 14,
+        //           fontWeight: FontWeight.w600,
+        //           color: _darkGreen,
+        //         ),
+        //       ),
+        //       _buildBarChart(),
 
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10,
-                children: [
-                  _buildLegendItem(
-                    color: _primaryGreen.withOpacity(0.8),
-                    label:
-                        'Mchango (TSh ${totalHisaContribution.toStringAsFixed(0)})',
-                  ),
-                  _buildLegendItem(
-                    color: _orange,
-                    label:
-                        'Faida (TSh ${expectedHisaProfit.toStringAsFixed(0)})',
-                  ),
-                ],
-              )
-            ],
-          ),
-        )
+        //       Wrap(
+        //         alignment: WrapAlignment.center,
+        //         spacing: 10,
+        //         children: [
+        //           _buildLegendItem(
+        //             color: _primaryGreen.withOpacity(0.8),
+        //             label:
+        //                 'Mchango (TSh ${totalHisaContribution.toStringAsFixed(0)})',
+        //           ),
+        //           _buildLegendItem(
+        //             color: _orange,
+        //             label:
+        //                 'Faida (TSh ${expectedHisaProfit.toStringAsFixed(0)})',
+        //           ),
+        //         ],
+        //       )
+        //     ],
+        //   ),
+        // )
       ],
     );
   }
@@ -134,23 +134,23 @@ class InsightScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
 
-        Center(
-          child: Column(
-            children: [
-              _buildPieChart(),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10,
-                children: [
-                  _buildLegendItem(
-                      color: Colors.greenAccent, label: 'Kikamilifu (Paid)'),
-                  _buildLegendItem(
-                      color: _orange.withOpacity(0.8), label: 'Salio (Remaining)'),
-                ],
-              )
-            ],
-          ),
-        ),
+        // Center(
+        //   child: Column(
+        //     children: [
+        //       _buildPieChart(),
+        //       Wrap(
+        //         alignment: WrapAlignment.center,
+        //         spacing: 10,
+        //         children: [
+        //           _buildLegendItem(
+        //               color: Colors.greenAccent, label: 'Kikamilifu (Paid)'),
+        //           _buildLegendItem(
+        //               color: _orange.withOpacity(0.8), label: 'Salio (Remaining)'),
+        //         ],
+        //       )
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
