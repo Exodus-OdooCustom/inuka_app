@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// OmbiScreen serves as the entry point for loan applications.
-/// It uses a BottomSheet "Popup" to present the list of loan types to the user.
 class OmbiScreen extends StatelessWidget {
   const OmbiScreen({super.key});
 
@@ -13,8 +11,8 @@ class OmbiScreen extends StatelessWidget {
 
   // Loan Data
   static const List<Map<String, dynamic>> _loanProducts = [
-    {'title': 'Mkopo wa Hisa', 'subtitle': '3x multiplier of your shares', 'icon': Icons.pie_chart_rounded, 'route': '/hisa'},
-    {'title': 'Mkopo wa Jamii', 'subtitle': 'Social emergency support', 'icon': Icons.groups_rounded, 'route': '/jamii'},
+    {'title': 'Mkopo wa Hisa', 'subtitle': '3x multiplier of your shares', 'icon': Icons.pie_chart_rounded, 'route': '/hisa_mkopo_application'},
+    {'title': 'Mkopo wa Jamii', 'subtitle': 'Social emergency support', 'icon': Icons.groups_rounded, 'route': '/jamii_mkopo_application'},
     {'title': 'Mkopo wa Elimu', 'subtitle': 'School and university fees', 'icon': Icons.school_rounded, 'route': '/elimu'},
     {'title': 'Mkopo wa Maendeleo', 'subtitle': 'Long-term investment/building', 'icon': Icons.trending_up_rounded, 'route': '/maendeleo'},
     {'title': 'Mkopo wa Kilimo', 'subtitle': 'Farming inputs and equipment', 'icon': Icons.agriculture_rounded, 'route': '/kilimo'},
@@ -39,7 +37,7 @@ class OmbiScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Visual Illustration Area (Placeholder for an SVG/Image)
+              // Visual Illustration Area
               Container(
                 height: 180,
                 width: 180,
@@ -62,7 +60,6 @@ class OmbiScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               
-              // Action Button to trigger Popup
               SizedBox(
                 width: double.infinity,
                 height: 60,
@@ -84,12 +81,11 @@ class OmbiScreen extends StatelessWidget {
     );
   }
 
-  /// Displays the Popup Window (Modal Bottom Sheet)
   void _showLoanSelection(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Required for custom rounded corners
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.75,
@@ -102,7 +98,6 @@ class OmbiScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              // Drag handle
               Center(
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 12),
@@ -137,7 +132,6 @@ class OmbiScreen extends StatelessWidget {
     );
   }
 
-  /// Individual item inside the popup list
   Widget _buildPopupItem(BuildContext context, Map<String, dynamic> loan) {
     return Container(
       decoration: BoxDecoration(
@@ -156,9 +150,11 @@ class OmbiScreen extends StatelessWidget {
         subtitle: Text(loan['subtitle'], style: const TextStyle(fontSize: 12)),
         trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.grey),
         onTap: () {
-          Navigator.pop(context); // Close popup
-          // Navigate to specific application form
-          print("Navigating to ${loan['route']}");
+          Navigator.pop(context); 
+
+          final String route = loan['route'] as String;
+
+          Navigator.pushNamed(context, route);
         },
       ),
     );
